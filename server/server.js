@@ -53,7 +53,7 @@ app.get('/todos/:id',(req,res)=>{
 app.delete('/todos/:id',(req,res)=>{
     
     let id = req.params.id;
-    console.log(id,'id is this');
+
     if(!ObjectID.isValid(id)){
         return res.status(404).send();
     }
@@ -63,7 +63,7 @@ app.delete('/todos/:id',(req,res)=>{
             return res.status(404).send();
         }
 
-        res.send(doc);
+        res.send({doc});
 
     }).catch((e)=>{
         res.status(400).send();
