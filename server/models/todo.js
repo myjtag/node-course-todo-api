@@ -11,7 +11,7 @@ let Todo = mongoose.model('Todo',{
         type: Boolean,
         default: false
     },
-    comeletedAt:{
+    compeletedAt:{
         type: Number,
         default: null
     }
