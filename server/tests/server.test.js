@@ -4,12 +4,15 @@ const {ObjectID} = require('mongodb');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
+
 const todos = [{
     _id:new ObjectID(),
     text: 'First test todo'
 },{
     _id:new ObjectID(),
-    text: 'Second test todo'
+    text: 'Second test todo',
+    compeleted : true,
+    compeletedAt: 333
 }];
 
 beforeEach((done)=>{
@@ -137,5 +140,50 @@ describe('DELTE todos/:id',()=>{
             .delete('/todos/123')
             .expect(404)
             .end(done);
+    });
+});
+
+
+describe('PATCH /todos/:id',()=>{
+
+    it('should update the todo',(done)=>{
+        //grab id of first item
+        let hexID = todos[0]._id.toHexString();
+        let text = 'This should be the new text';
+        request(app)
+            .patch(`/todos/${hexID}`)
+            .send({
+                compeleted:true,
+                text
+            })
+            .expect(200)
+            .expect((res)=>{
+                expect(res.body.todo.text).toBe(text);
+                expect(typeof res.body.todo.compeletedAt).toBe('number');
+                expect(res.body.todo.compeleted).toBe(true);
+            })
+            .end(done);
+        //update text, set compeleted true
+        //200
+        //text is changed, compelted is true, compeletedAt is a mmber .toBeA
+    });
+
+    it('should clear compeletedat when todo is not compeleted',(done)=>{
+        let hexID = todos[1]._id.toHexString();
+        let text = 'This should be the new text 2';
+        request(app)
+        .patch(`/todos/${hexID}`)
+        .send({
+            compeleted:false,
+            text
+        })
+        .expect(200)
+        .expect((res)=>{
+            expect(res.body.todo.text).toBe(text);
+            expect(res.body.todo.compeletedAt).toBeFalsy();
+            expect(res.body.todo.compeleted).toBe(false);
+        })
+        .end(done);
+
     });
 });
