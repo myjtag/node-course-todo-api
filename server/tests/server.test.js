@@ -184,6 +184,7 @@ describe('PATCH /todos/:id',()=>{
                 expect(res.body.todo.text).toBe(text);
                 expect(typeof res.body.todo.compeletedAt).toBe('number');
                 expect(res.body.todo.compeleted).toBe(true);
+
             })
             .end(done);
         //update text, set compeleted true
@@ -250,9 +251,9 @@ describe('GET /users/me',()=>{
             .get('/users/me')
             //.set('',users[0].tokens[0].token)
             .expect(401)
-            // .expect((res)=>{
-            //      expect(res.body).toBeNull();
-            // })
+            .expect((res)=>{
+                 expect(res.body).toEqual({});
+            })
             .end(done);
     });
 });
@@ -324,10 +325,10 @@ describe('POST /users/login',()=>{
                 }
 
                 User.findById(users[1]._id).then((user)=>{
-                    // expect(user.tokens[0]).toInclude({
-                    //     access:'auth',
-                    //     token: res.headers['x-auth']
-                    // });
+                    expect(user.toObject().tokens[1]).toMatchObject({
+                        access:'auth',
+                        token: res.headers['x-auth']
+                    });
                     done();
                 }).catch((e)=> done(e));
             });
